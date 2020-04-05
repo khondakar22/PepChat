@@ -1,10 +1,27 @@
 const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
+const roomName = document.getElementById('room-name');
+const userList = document.getElementById('users');
+
 const socket = io();
+
+
+// Get Username and room from URL
+const { username, room } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true
+});
+
+// Join Chatroom
+socket.emit('joinRoom', {username, room});
+
+// Get room and users
+socket.on('roomUsers', ({ room, users}) => {
+  outputRoomName(room);
+  outputUsers(users);
+});
 
 // Message from server
 socket.on('message', message => {
-  console.log(message);
   outputMessage(message);
 
   // Scroll down
@@ -36,3 +53,26 @@ function outputMessage(message) {
   </p>`;
   document.querySelector('.chat-messages').appendChild(div);
 }
+
+// Add room name to Dom
+function outputRoomName(room) {
+  roomName.innerHTML = room;
+}
+
+// Add user to Dom
+function outputUsers(users) {
+  userList.innerHTML = `
+  ${users.map(user => `<li> ${user.username}</li>`).join('')}
+  `;
+}
+
+// Add Emoji
+const button = document.querySelector('#emoji-button'); 
+const picker = new EmojiButton();
+
+picker.on('emoji', emoji => {
+  document.querySelector('#msg').value += emoji;
+});
+button.addEventListener('click', () => {
+  picker.togglePicker(button);
+})

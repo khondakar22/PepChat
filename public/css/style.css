@@ -188,7 +188,13 @@ a {
 .join-main .btn:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
-
+#emoji-button {
+	margin-right: 0.1rem;
+}
+.fas {
+margin: auto;
+font-size: 1.5rem;
+}
 @media (max-width: 700px) {
 	.chat-main {
 		display: block;
